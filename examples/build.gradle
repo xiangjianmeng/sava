@@ -1,5 +1,5 @@
 dependencies {
-  implementation 'systems.comodal:json-iterator:2.13.0'
+  implementation files(System.getProperty('user.home') + '/.m2/repository/systems/comodal/json-iterator/2.13.0/json-iterator-2.13.0.jar')
   implementation project(':core')
   implementation project(':rpc')
 }
@@ -29,7 +29,4 @@ java {
 
 repositories {
   mavenLocal()
-  maven {
-    url = 'file:///Users/oker/.m2/repository'
-  }
 }

@@ -1,19 +1,17 @@
 dependencies {
-  // 使用文件系统路径引用JAR文件
-  implementation files('/Users/oker/.m2/repository/systems/comodal/json-iterator/2.13.0/json-iterator-2.13.0.jar')
-  implementation 'systems.comodal:json-iterator:2.13.0'
+  // 直接引用 JAR 文件
+  implementation files(System.getProperty('user.home') + '/.m2/repository/systems/comodal/json-iterator/2.13.0/json-iterator-2.13.0.jar')
   implementation project(':core')
 }
 
 configurations.all {
   resolutionStrategy {
-    eachDependency { details ->
-      if (details.requested.group == 'systems.comodal' && details.requested.name == 'json-iterator') {
-        details.useVersion '2.13.0'
-        details.because "Forced to use locally built version compatible with Java 17"
-      }
-    }
+    // 配置依赖解析策略
+    failOnVersionConflict()
   }
+  
+  // 忽略 JVM 版本兼容性检查
+  attributes.attribute(org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
 }
 
 // 配置编译选项
@@ -35,8 +33,5 @@ gradle.taskGraph.whenReady {
 }
 
 repositories {
-  mavenLocal()
-  maven {
-    url = 'file:///Users/oker/.m2/repository'
-  }
+  mavenLocal() // 使用本地 Maven 仓库
 }

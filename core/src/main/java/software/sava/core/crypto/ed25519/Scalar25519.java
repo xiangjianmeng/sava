@@ -21,11 +21,21 @@ final class Scalar25519 {
   }
 
   static void toSignedDigits(final int[] var1) {
-    Nat.caddTo(8, ~var1[0] & 1, L, var1);
+    int mask = ~var1[0] & 1;
+    int c = 0;
+    for (int i = 0; i < 8; ++i) {
+      c += L[i] & mask;
+      c += var1[i];
+      var1[i] = c;
+      c >>>= 32;
+    }
+    
     Nat.shiftDownBit(8, var1, 1);
   }
 
   private Scalar25519() {
   }
 }
+
+
 

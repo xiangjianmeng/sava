@@ -5,7 +5,8 @@ plugins {
 apply(plugin: 'org.beryx.jlink')
 
 dependencies {
-  implementation libs.json.iterator
+  // 直接引用 JAR 文件
+  implementation files(System.getProperty('user.home') + '/.m2/repository/systems/comodal/json-iterator/2.13.0/json-iterator-2.13.0.jar')
   implementation project(':core')
 }
 

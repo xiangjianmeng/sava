@@ -10,6 +10,7 @@ def gprToken = providers.gradleProperty("gpr.token")
 
 dependencyResolutionManagement {
   repositories {
+    mavenLocal()
     maven {
       name = "GithubPackages"
       url = "https://maven.pkg.github.com/sava-software/solana-version-catalog"
@@ -21,11 +22,10 @@ dependencyResolutionManagement {
             ? gprToken.get()
             : System.getProperty("gpr.token", System.getenv("GITHUB_TOKEN"))
       }
+      content {
+        includeGroup "software.sava"
+      }
     }
-  }
-  versionCatalogs {
-    libs {
-      from("software.sava:solana-version-catalog:0.6.27")
-    }
+    mavenCentral()
   }
 }
