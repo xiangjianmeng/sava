@@ -518,7 +518,7 @@ final class ParseTransactionErrorTests {
     final var txSignatures = TxSig.parseSignatures(ji);
     assertEquals(10, txSignatures.size());
 
-    var txSig = txSignatures.getFirst();
+    var txSig = txSignatures.get(0);
     assertEquals(275200832L, txSig.slot());
     assertTrue(txSig.blockTime().isPresent());
     assertEquals(1719899984L, txSig.blockTime().getAsLong());
@@ -536,7 +536,7 @@ final class ParseTransactionErrorTests {
     assertNull(txSig.memo());
     assertEquals("31wAdYrVhyzNSzQ42tdBES1znVrNt58dYBLSVdX6bWFRu5FGoTKrBDHrURjJcHnXns33YhJvppmx6vBAT8dyk78i", txSig.signature());
 
-    txSig = txSignatures.getLast();
+    txSig = txSignatures.get(txSignatures.size() - 1);
     assertEquals(270151056L, txSig.slot());
     assertTrue(txSig.blockTime().isPresent());
     assertEquals(1717646362L, txSig.blockTime().getAsLong());

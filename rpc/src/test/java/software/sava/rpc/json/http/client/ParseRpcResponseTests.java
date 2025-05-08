@@ -53,7 +53,7 @@ final class ParseRpcResponseTests {
     final var signatures = TxSig.parseSignatures(ji);
     assertEquals(3, signatures.size());
 
-    var signature = signatures.getFirst();
+    var signature = signatures.get(0);
     assertEquals(OptionalLong.empty(), signature.blockTime());
     assertEquals(Commitment.FINALIZED, signature.confirmationStatus());
     assertNull(signature.transactionError());
@@ -61,7 +61,7 @@ final class ParseRpcResponseTests {
     assertEquals("576BepPoQS74PwoLiBzTUBoSqjhZe72S7KXgWPwokjm7TKxatp8jAerHsq6rnZ7dZQXUJ7WoLkuJZ2qAHoFTQL9U", signature.signature());
     assertEquals(325301549, signature.slot());
 
-    signature = signatures.getLast();
+    signature = signatures.get(signatures.size() - 1);
     assertEquals(OptionalLong.of(1737853408), signature.blockTime());
     assertEquals(Commitment.FINALIZED, signature.confirmationStatus());
     assertNull(signature.transactionError());
@@ -137,7 +137,7 @@ final class ParseRpcResponseTests {
 
     final var rewardList = block.rewards();
     assertEquals(1, rewardList.size());
-    final var reward = rewardList.getFirst();
+    final var reward = rewardList.get(0);
     assertEquals(0, reward.commission());
     assertEquals(18646889, reward.lamports());
     assertEquals(51603762212L, reward.postBalance());
@@ -146,9 +146,9 @@ final class ParseRpcResponseTests {
 
     final var signatures = block.signatures();
     assertEquals(3, signatures.size());
-    assertEquals("5rxL9uYfPTYf74JQvLxKTNr2iAzz99Cbdo4tAmWj8m3N85JBMsF6hnA1nWi2f3KsjYJVqGVTx45rgZHFgwjz2mg9", signatures.getFirst());
+    assertEquals("5rxL9uYfPTYf74JQvLxKTNr2iAzz99Cbdo4tAmWj8m3N85JBMsF6hnA1nWi2f3KsjYJVqGVTx45rgZHFgwjz2mg9", signatures.get(0));
     assertEquals("5SBCThjjegPpWDHcW8esGTK7UYJwpKnKrwBVhHVtNzg3XmReFBQYAw5pE1u8SDgWaW8WU7CYBmihKtet1rqHVRqc", signatures.get(1));
-    assertEquals("3L8q8yNQCZP7L5VraVUPSdnVXHAGqtNqf891tc81QGrDZQQr3BJxExUVWcfu5BJKaBaPkDofdpGQ2bGsoFdW7UGT", signatures.getLast());
+    assertEquals("3L8q8yNQCZP7L5VraVUPSdnVXHAGqtNqf891tc81QGrDZQQr3BJxExUVWcfu5BJKaBaPkDofdpGQ2bGsoFdW7UGT", signatures.get(signatures.size() - 1));
 
   }
 }

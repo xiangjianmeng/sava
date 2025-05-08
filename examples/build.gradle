@@ -1,5 +1,35 @@
 dependencies {
-  implementation libs.json.iterator
+  implementation 'systems.comodal:json-iterator:2.13.0'
   implementation project(':core')
   implementation project(':rpc')
+}
+
+configurations.all {
+  resolutionStrategy {
+    eachDependency { details ->
+      if (details.requested.group == 'systems.comodal' && details.requested.name == 'json-iterator') {
+        details.useVersion '2.13.0'
+        details.because "Forced to use locally built version compatible with Java 17"
+      }
+    }
+  }
+}
+
+// Use Java 17 explicitly for compilation
+tasks.withType(JavaCompile).configureEach {
+  options.compilerArgs << '--release' << '17'
+  options.fork = true
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenLocal()
+  maven {
+    url = 'file:///Users/oker/.m2/repository'
+  }
 }

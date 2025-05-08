@@ -158,7 +158,7 @@ final class SolanaRpcTests {
         )
     ).join();
     assertEquals(1, inflationRewards.size());
-    var inflationReward = inflationRewards.getFirst();
+    var inflationReward = inflationRewards.get(0);
     assertEquals(1854511658, inflationReward.amount());
     assertEquals(5, inflationReward.commission());
     assertEquals(338256000, inflationReward.effectiveSlot());
@@ -167,10 +167,10 @@ final class SolanaRpcTests {
 
     inflationRewards = rpcClient.getInflationReward(List.of(
             PublicKey.fromBase58Encoded("BDn3HiXMTym7ZQofWFxDb7ZGQX6GomQzJYKfytTAqd5g")
-        ), inflationRewards.getFirst().epoch() - 1
+        ), inflationRewards.get(0).epoch() - 1
     ).join();
     assertEquals(1, inflationRewards.size());
-    inflationReward = inflationRewards.getFirst();
+    inflationReward = inflationRewards.get(0);
     assertEquals(1940761929, inflationReward.amount());
     assertEquals(5, inflationReward.commission());
     assertEquals(337824000, inflationReward.effectiveSlot());
@@ -206,10 +206,10 @@ final class SolanaRpcTests {
   }
 
   private static void validateMultipleAccounts(final List<AccountInfo<byte[]>> accounts) {
-    var accountInfo = accounts.getFirst();
+    var accountInfo = accounts.get(0);
     assertEquals("7ubS3GccjhQY99AYNKXjNJqnXjaokEdfdV915xnCb96r", accountInfo.pubKey().toBase58());
 
-    accountInfo = accounts.getLast();
+    accountInfo = accounts.get(accounts.size() - 1);
     assertEquals("5rCf1DM8LjKTw4YqhnoLcngyZYeNnQqztScTogYHAS6", accountInfo.pubKey().toBase58());
   }
 
@@ -231,12 +231,12 @@ final class SolanaRpcTests {
 
     assertEquals(2, accounts.size());
     validateMultipleAccounts(accounts);
-    var accountInfo = accounts.getFirst();
+    var accountInfo = accounts.get(0);
     byte[] data = accountInfo.data();
     assertEquals(32, data.length);
     assertEquals("cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij", PublicKey.readPubKey(data).toString());
 
-    accountInfo = accounts.getLast();
+    accountInfo = accounts.get(accounts.size() - 1);
     data = accountInfo.data();
     assertEquals(32, data.length);
     assertEquals("So11111111111111111111111111111111111111112", PublicKey.readPubKey(data).toBase58());
@@ -282,12 +282,12 @@ final class SolanaRpcTests {
   private void validateCompleteMultipleAccounts(final List<AccountInfo<byte[]>> accounts) {
     validateMultipleAccounts(accounts);
 
-    var accountInfo = accounts.getFirst();
+    var accountInfo = accounts.get(0);
     byte[] data = accountInfo.data();
     assertEquals(904, data.length);
     assertEquals("cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij", PublicKey.readPubKey(data, 88).toString());
 
-    accountInfo = accounts.getLast();
+    accountInfo = accounts.get(accounts.size() - 1);
     data = accountInfo.data();
     assertEquals(904, data.length);
     assertEquals("So11111111111111111111111111111111111111112", PublicKey.readPubKey(data, 88).toBase58());
@@ -318,7 +318,7 @@ final class SolanaRpcTests {
     var nodeHealth = rpcClient.getHealth().join();
     assertNull(nodeHealth);
 
-    rpcClient = createClient(_ -> true);
+    rpcClient = createClient(unused -> true);
     rpcClient.id.set(0);
     nodeHealth = rpcClient.getHealth().join();
     validateNodeHealth(nodeHealth);

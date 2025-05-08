@@ -18,7 +18,7 @@ final class HttpClientTests {
     System.setProperty("com.sun.net.httpserver.HttpServerProvider", "sun.net.httpserver.DefaultHttpServerProvider");
   }
 
-  private static final ExecutorService HTTP_EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
+  private static final ExecutorService HTTP_EXECUTOR = Executors.newFixedThreadPool(4);
 
   static HttpClient createClient() {
     return HttpClient.newBuilder().executor(HTTP_EXECUTOR).build();

@@ -25,7 +25,7 @@ public record AccountInfo<T>(PublicKey pubKey,
                              int space,
                              T data) implements DecimalIntegerAmount {
 
-  public static BiFunction<PublicKey, byte[], byte[]> BYTES_IDENTITY = (_, data) -> data;
+  public static BiFunction<PublicKey, byte[], byte[]> BYTES_IDENTITY = (key, data) -> data;
 
   public static void cacheTables(final Collection<AccountInfo<AddressLookupTable>> tableAccounts,
                                  final Map<PublicKey, AddressLookupTable> cache) {
@@ -56,7 +56,7 @@ public record AccountInfo<T>(PublicKey pubKey,
     return ji.testObject(new Builder(context, publicKey), ACCOUNT_PARSER).create(factory);
   }
 
-  public static <T> List<AccountInfo<T>> parseAccountsFromKeys(final SequencedCollection<PublicKey> pubKeys,
+  public static <T> List<AccountInfo<T>> parseAccountsFromKeys(final Collection<PublicKey> pubKeys,
                                                                final JsonIterator ji,
                                                                final Context context,
                                                                final BiFunction<PublicKey, byte[], T> factory) {
@@ -75,7 +75,7 @@ public record AccountInfo<T>(PublicKey pubKey,
     return accounts;
   }
 
-  public static <T> List<AccountInfo<T>> parseAccountsFromKeysWithNulls(final SequencedCollection<PublicKey> pubKeys,
+  public static <T> List<AccountInfo<T>> parseAccountsFromKeysWithNulls(final Collection<PublicKey> pubKeys,
                                                                         final JsonIterator ji,
                                                                         final Context context,
                                                                         final BiFunction<PublicKey, byte[], T> factory) {
@@ -165,7 +165,7 @@ public record AccountInfo<T>(PublicKey pubKey,
     }
 
     private <T> AccountInfo<T> create(final BiFunction<PublicKey, byte[], T> factory) {
-      return new AccountInfo<>(pubKey, context, executable, lamports, owner, rentEpoch, space, factory.apply(pubKey, data));
+      return new AccountInfo<>(pubKey, super.context, executable, lamports, owner, rentEpoch, space, factory.apply(pubKey, data));
     }
   }
 }

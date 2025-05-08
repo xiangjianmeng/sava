@@ -341,33 +341,33 @@ final class ParseTXTests {
     final var innerInstructions = meta.innerInstructions();
     assertEquals(2, innerInstructions.size());
 
-    var innerIx = innerInstructions.getFirst();
+    var innerIx = innerInstructions.get(0);
     assertEquals(2, innerIx.index());
     var instructions = innerIx.instructions();
     assertEquals(4, instructions.size());
-    var ix = instructions.getFirst();
+    var ix = instructions.get(0);
     assertArrayEquals(new int[]{13}, ix.accountIndices());
     assertEquals("84eT", ix.b58Data());
     assertEquals(6, ix.programIdIndex());
     assertEquals(2, ix.stackHeight());
 
-    ix = instructions.getLast();
+    ix = instructions.get(instructions.size() - 1);
     assertArrayEquals(new int[]{1, 13}, ix.accountIndices());
     assertEquals("6auHQdCNgSFbow1FwY7q5okS6HR93Lmaw5gGnfhCzMfcU", ix.b58Data());
     assertEquals(6, ix.programIdIndex());
     assertEquals(2, ix.stackHeight());
 
-    innerIx = innerInstructions.getLast();
+    innerIx = innerInstructions.get(innerInstructions.size() - 1);
     assertEquals(5, innerIx.index());
     instructions = innerIx.instructions();
     assertEquals(4, instructions.size());
-    ix = instructions.getFirst();
+    ix = instructions.get(0);
     assertArrayEquals(new int[]{6, 10, 14, 10, 12, 11, 10, 10, 10, 10, 10, 10, 10, 10, 1, 2, 0}, ix.accountIndices());
     assertEquals("5uZJEbuZKBdvJJ4oxtz2buR", ix.b58Data());
     assertEquals(15, ix.programIdIndex());
     assertEquals(2, ix.stackHeight());
 
-    ix = instructions.getLast();
+    ix = instructions.get(instructions.size() - 1);
     assertArrayEquals(new int[]{9}, ix.accountIndices());
     assertEquals(
         "QMqFu4fYGGeUEysFnenhAvR83g86EDDNxzUskfkWKYCBPWe1hqgD6jgKAXr6aYoEQaxoqYMTvWgPVk2AHWGHjdbNiNtoaPfZA4znu6cRUSWSeJF9uSjAY6beqYCHcgxCSLGoPDABThY1WoDL8UrGdxPMHsMAb4ijDY5RmSzh2FDodqZ",
@@ -379,18 +379,18 @@ final class ParseTXTests {
     final var loadedAddresses = meta.loadedAddresses();
     final var readOnly = loadedAddresses.readonly();
     assertEquals(3, readOnly.size());
-    assertEquals(PublicKey.fromBase58Encoded("So11111111111111111111111111111111111111112"), readOnly.getFirst());
-    assertEquals(PublicKey.fromBase58Encoded("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"), readOnly.getLast());
+    assertEquals(PublicKey.fromBase58Encoded("So11111111111111111111111111111111111111112"), readOnly.get(0));
+    assertEquals(PublicKey.fromBase58Encoded("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"), readOnly.get(readOnly.size() - 1));
 
     final var writable = loadedAddresses.writable();
     assertEquals(3, writable.size());
-    assertEquals(PublicKey.fromBase58Encoded("7bbUVnKL7McGS1tH5qfNNWCANWNXjXELF6BLqVe4Batt"), writable.getFirst());
-    assertEquals(PublicKey.fromBase58Encoded("GSUxFEYjsh9Xxa8A9k689YwG4t9NUNQvN4YinSiroXmp"), writable.getLast());
+    assertEquals(PublicKey.fromBase58Encoded("7bbUVnKL7McGS1tH5qfNNWCANWNXjXELF6BLqVe4Batt"), writable.get(0));
+    assertEquals(PublicKey.fromBase58Encoded("GSUxFEYjsh9Xxa8A9k689YwG4t9NUNQvN4YinSiroXmp"), writable.get(writable.size() - 1));
 
     final var logMessages = meta.logMessages();
     assertEquals(55, logMessages.size());
-    assertEquals("Program ComputeBudget111111111111111111111111111111 invoke [1]", logMessages.getFirst());
-    assertEquals("Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success", logMessages.getLast());
+    assertEquals("Program ComputeBudget111111111111111111111111111111 invoke [1]", logMessages.get(0));
+    assertEquals("Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success", logMessages.get(logMessages.size() - 1));
 
     assertArrayEquals(
         new long[]{5060481242L, 0L, 2039280L, 1L, 1L, 1141440L, 934087680L, 731913600L, 1461600L, 0L, 6124800L, 2039280L, 677378827840L, 725135288856L, 13078066259L, 1141440},
@@ -404,7 +404,7 @@ final class ParseTXTests {
     final var preTokenBalances = meta.preTokenBalances();
     assertEquals(3, preTokenBalances.size());
 
-    var tokenBalance = preTokenBalances.getFirst();
+    var tokenBalance = preTokenBalances.get(0);
     assertEquals(2, tokenBalance.accountIndex());
     assertEquals(PublicKey.fromBase58Encoded("BUZFom1YPnAZVYSccbpddBmFYmHcS4Xtc3JQG5cFpump"), tokenBalance.mint());
     assertEquals(PublicKey.fromBase58Encoded("Emajgzqt9QKyfXARSxdkKmzhnXZDw2KENm6wB7XB4XBW"), tokenBalance.owner());
@@ -412,7 +412,7 @@ final class ParseTXTests {
     assertEquals(new BigInteger("0"), tokenBalance.amount());
     assertEquals(6, tokenBalance.decimals());
 
-    tokenBalance = preTokenBalances.getLast();
+    tokenBalance = preTokenBalances.get(preTokenBalances.size() - 1);
     assertEquals(12, tokenBalance.accountIndex());
     assertEquals(PublicKey.fromBase58Encoded("So11111111111111111111111111111111111111112"), tokenBalance.mint());
     assertEquals(PublicKey.fromBase58Encoded("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"), tokenBalance.owner());
@@ -423,7 +423,7 @@ final class ParseTXTests {
     final var postTokenBalances = meta.postTokenBalances();
     assertEquals(3, postTokenBalances.size());
 
-    tokenBalance = postTokenBalances.getFirst();
+    tokenBalance = postTokenBalances.get(0);
     assertEquals(2, tokenBalance.accountIndex());
     assertEquals(PublicKey.fromBase58Encoded("BUZFom1YPnAZVYSccbpddBmFYmHcS4Xtc3JQG5cFpump"), tokenBalance.mint());
     assertEquals(PublicKey.fromBase58Encoded("Emajgzqt9QKyfXARSxdkKmzhnXZDw2KENm6wB7XB4XBW"), tokenBalance.owner());
@@ -431,7 +431,7 @@ final class ParseTXTests {
     assertEquals(new BigInteger("27504297755"), tokenBalance.amount());
     assertEquals(6, tokenBalance.decimals());
 
-    tokenBalance = postTokenBalances.getLast();
+    tokenBalance = postTokenBalances.get(postTokenBalances.size() - 1);
     assertEquals(12, tokenBalance.accountIndex());
     assertEquals(PublicKey.fromBase58Encoded("So11111111111111111111111111111111111111112"), tokenBalance.mint());
     assertEquals(PublicKey.fromBase58Encoded("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"), tokenBalance.owner());

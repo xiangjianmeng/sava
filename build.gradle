@@ -3,9 +3,23 @@ ext {
   VCS_URL = 'https://github.com/sava-software/sava'
 }
 
-final JLV = JavaLanguageVersion.of(project.findProperty('javaVersion') as Integer ?: 24)
+final JLV = JavaLanguageVersion.of(project.findProperty('javaVersion') as Integer ?: 17)
 final GPR_USER = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
 final GPR_TOKEN = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+
+// Disable JVM compatibility verification for all projects
+allprojects {
+  configurations.all {
+    resolutionStrategy {
+      eachDependency { details ->
+        if (details.requested.group == 'systems.comodal' && details.requested.name == 'json-iterator') {
+          details.useVersion '2.13.0'
+          details.because "Forced to use locally built version compatible with Java 17"
+        }
+      }
+    }
+  }
+}
 
 subprojects {
   apply(plugin: 'java-library')
@@ -24,7 +38,12 @@ subprojects {
     }
   }
 
+  // Add local Maven repository to all projects
   repositories {
+    mavenLocal()
+    maven {
+      url = 'file:///Users/oker/.m2/repository'
+    }
     maven {
       url = "https://maven.pkg.github.com/comodal/json-iterator"
       credentials {
@@ -33,6 +52,12 @@ subprojects {
       }
     }
     mavenCentral()
+  }
+
+  // Configure Java 17 compilation for all subprojects
+  tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '--release' << '17'
+    options.fork = true
   }
 
   dependencies {

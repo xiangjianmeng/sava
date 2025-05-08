@@ -114,7 +114,7 @@ public interface Transaction {
   }
 
   static Transaction createTx(final AccountMeta feePayer, final List<Instruction> instructions) {
-    final var accounts = HashMap.<PublicKey, AccountMeta>newHashMap(MAX_ACCOUNTS);
+    final var accounts = new HashMap<PublicKey, AccountMeta>(MAX_ACCOUNTS);
     final int serializedInstructionLength = mergeAccounts(feePayer, accounts, instructions);
     return createTx(instructions, serializedInstructionLength, sortLegacyAccounts(accounts));
   }
@@ -133,7 +133,7 @@ public interface Transaction {
     if (lookupTable == null) {
       return createTx(feePayer, instructions);
     }
-    final var accounts = HashMap.<PublicKey, AccountMeta>newHashMap(MAX_ACCOUNTS);
+    final var accounts = new HashMap<PublicKey, AccountMeta>(MAX_ACCOUNTS);
     final int serializedInstructionLength = mergeAccounts(feePayer, accounts, instructions);
     return createTx(instructions, serializedInstructionLength, sortV0Accounts(accounts), lookupTable);
   }
@@ -204,7 +204,7 @@ public interface Transaction {
                               final int serializedInstructionLength,
                               final AccountMeta[] sortedAccounts) {
     final int numAccounts = sortedAccounts.length;
-    final var accountIndexLookupTable = HashMap.<PublicKey, Integer>newHashMap(numAccounts);
+    final var accountIndexLookupTable = new HashMap<PublicKey, Integer>(numAccounts);
 
     int numRequiredSignatures = 0;
     int numReadonlySignedAccounts = 0;
@@ -288,7 +288,7 @@ public interface Transaction {
       return createTx(instructions, serializedInstructionLength, sortedAccounts);
     }
     final int numAccounts = sortedAccounts.length;
-    final var accountIndexLookupTable = HashMap.<PublicKey, Integer>newHashMap(numAccounts);
+    final var accountIndexLookupTable = new HashMap<PublicKey, Integer>(numAccounts);
 
     int numRequiredSignatures = 0;
     int numReadonlySignedAccounts = 0;
@@ -390,7 +390,7 @@ public interface Transaction {
   static Transaction createTx(final AccountMeta feePayer,
                               final List<Instruction> instructions,
                               final LookupTableAccountMeta[] tableAccountMetas) {
-    final var accounts = HashMap.<PublicKey, AccountMeta>newHashMap(MAX_ACCOUNTS);
+    final var accounts = new HashMap<PublicKey, AccountMeta>(MAX_ACCOUNTS);
     final int serializedInstructionLength = mergeAccounts(feePayer, accounts, instructions);
     return createTx(instructions, serializedInstructionLength, accounts, tableAccountMetas);
   }
@@ -429,7 +429,7 @@ public interface Transaction {
     }
 
     final int numAccounts = sortedAccounts.length;
-    final var accountIndexLookupTable = HashMap.<PublicKey, Integer>newHashMap(numAccounts);
+    final var accountIndexLookupTable = new HashMap<PublicKey, Integer>(numAccounts);
 
     int numRequiredSignatures = 0;
     int numReadonlySignedAccounts = 0;
@@ -566,7 +566,7 @@ public interface Transaction {
     return Base64.getEncoder().encodeToString(out);
   }
 
-  static void sign(final SequencedCollection<Signer> signers,
+  static void sign(final Collection<Signer> signers,
                    final byte[] out,
                    final int msgOffset,
                    final int msgLen,
@@ -576,7 +576,7 @@ public interface Transaction {
     }
   }
 
-  static void sign(final SequencedCollection<Signer> signers, final byte[] out) {
+  static void sign(final Collection<Signer> signers, final byte[] out) {
     final int numSigners = signers.size();
     out[0] = (byte) numSigners;
     final int sigLen = 1 + (numSigners * Transaction.SIGNATURE_LENGTH);
@@ -584,7 +584,7 @@ public interface Transaction {
     Transaction.sign(signers, out, sigLen, msgLen, 1);
   }
 
-  static String signAndBase64Encode(final SequencedCollection<Signer> signers, final byte[] out) {
+  static String signAndBase64Encode(final Collection<Signer> signers, final byte[] out) {
     sign(signers, out);
     return Base64.getEncoder().encodeToString(out);
   }
@@ -620,29 +620,29 @@ public interface Transaction {
     return signAndBase64Encode(Base58.decode(recentBlockHash), signer);
   }
 
-  void sign(final SequencedCollection<Signer> signers);
+  void sign(final Collection<Signer> signers);
 
-  default String signAndBase64Encode(final SequencedCollection<Signer> signers) {
+  default String signAndBase64Encode(final Collection<Signer> signers) {
     sign(signers);
     return base64EncodeToString();
   }
 
-  default void sign(final byte[] recentBlockHash, final SequencedCollection<Signer> signers) {
+  default void sign(final byte[] recentBlockHash, final Collection<Signer> signers) {
     setRecentBlockHash(recentBlockHash);
     sign(signers);
   }
 
-  default void sign(final String recentBlockHash, final SequencedCollection<Signer> signers) {
+  default void sign(final String recentBlockHash, final Collection<Signer> signers) {
     setRecentBlockHash(recentBlockHash);
     sign(signers);
   }
 
-  default String signAndBase64Encode(final byte[] recentBlockHash, final SequencedCollection<Signer> signers) {
+  default String signAndBase64Encode(final byte[] recentBlockHash, final Collection<Signer> signers) {
     sign(recentBlockHash, signers);
     return base64EncodeToString();
   }
 
-  default String signAndBase64Encode(final String recentBlockHash, final SequencedCollection<Signer> signers) {
+  default String signAndBase64Encode(final String recentBlockHash, final Collection<Signer> signers) {
     sign(recentBlockHash, signers);
     return base64EncodeToString();
   }
@@ -679,11 +679,11 @@ public interface Transaction {
 
   Transaction prependInstructions(final Instruction ix1, final Instruction ix2);
 
-  Transaction prependInstructions(final SequencedCollection<Instruction> instructions);
+  Transaction prependInstructions(final Collection<Instruction> instructions);
 
   Transaction appendIx(final Instruction ix);
 
-  Transaction appendInstructions(final SequencedCollection<Instruction> instructions);
+  Transaction appendInstructions(final Collection<Instruction> instructions);
 
   Transaction replaceInstruction(final int index, final Instruction instruction);
 

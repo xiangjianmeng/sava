@@ -17,37 +17,36 @@ public final class SubscribeToTokenAccounts {
     final var solanaAccounts = SolanaAccounts.MAIN_NET;
     final var tokenProgram = solanaAccounts.tokenProgram();
     final var tokenOwner = PublicKey.fromBase58Encoded("");
-    try (final var httpClient = HttpClient.newHttpClient()) {
-      final var webSocket = SolanaRpcWebsocket.build()
-          .uri(SolanaNetwork.MAIN_NET.getWebSocketEndpoint())
-          .webSocketBuilder(httpClient)
-          .commitment(Commitment.CONFIRMED)
-          .solanaAccounts(solanaAccounts)
-          .onOpen(ws -> System.out.println("Websocket connected to " + ws.endpoint().getHost()))
-          .onClose((ws, statusCode, reason) -> {
-            ws.close();
-            System.out.format("%d: %s%n", statusCode, reason);
-          })
-          .onError((ws, throwable) -> {
-            ws.close();
-            throwable.printStackTrace(System.err);
-          })
-          .create();
+    final var httpClient = HttpClient.newHttpClient();
+    final var webSocket = SolanaRpcWebsocket.build()
+        .uri(SolanaNetwork.MAIN_NET.getWebSocketEndpoint())
+        .webSocketBuilder(httpClient)
+        .commitment(Commitment.CONFIRMED)
+        .solanaAccounts(solanaAccounts)
+        .onOpen(ws -> System.out.println("Websocket connected to " + ws.endpoint().getHost()))
+        .onClose((ws, statusCode, reason) -> {
+          ws.close();
+          System.out.format("%d: %s%n", statusCode, reason);
+        })
+        .onError((ws, throwable) -> {
+          ws.close();
+          throwable.printStackTrace(System.err);
+        })
+        .create();
 
-      webSocket.programSubscribe(
-          tokenProgram,
-          List.of(
-              Filter.createDataSizeFilter(TokenAccount.BYTES),
-              Filter.createMemCompFilter(TokenAccount.OWNER_OFFSET, tokenOwner)
-          ),
-          accountInfo -> {
-            final var tokenAccount = TokenAccount.read(accountInfo.pubKey(), accountInfo.data());
-            System.out.println(tokenAccount);
-          });
+    webSocket.programSubscribe(
+        tokenProgram,
+        List.of(
+            Filter.createDataSizeFilter(TokenAccount.BYTES),
+            Filter.createMemCompFilter(TokenAccount.OWNER_OFFSET, tokenOwner)
+        ),
+        accountInfo -> {
+          final var tokenAccount = TokenAccount.read(accountInfo.pubKey(), accountInfo.data());
+          System.out.println(tokenAccount);
+        });
 
-      webSocket.connect().join();
+    webSocket.connect().join();
 
-      Thread.sleep(Integer.MAX_VALUE);
-    }
+    Thread.sleep(Integer.MAX_VALUE);
   }
 }

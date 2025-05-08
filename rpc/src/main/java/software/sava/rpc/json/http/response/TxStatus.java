@@ -23,10 +23,10 @@ public record TxStatus(Context context,
         && confirmationStatus == null;
   }
 
-  public static Map<String, TxStatus> parse(final SequencedCollection<String> txIds,
+  public static Map<String, TxStatus> parse(final Collection<String> txIds,
                                             final JsonIterator ji,
                                             final Context context) {
-    final var statuses = HashMap.<String, TxStatus>newHashMap(txIds.size());
+    final var statuses = new HashMap<String, TxStatus>(txIds.size());
     final var iterator = txIds.iterator();
     TxStatus nil = null;
     while (ji.readArray()) {

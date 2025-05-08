@@ -11,29 +11,28 @@ import java.net.http.HttpClient;
 public final class SubscribeToLookupTables {
 
   public static void main(final String[] args) throws InterruptedException {
-    try (final var httpClient = HttpClient.newHttpClient()) {
+    final var httpClient = HttpClient.newHttpClient();
 
-      final var webSocket = SolanaRpcWebsocket.build()
-          .uri(SolanaNetwork.MAIN_NET.getWebSocketEndpoint())
-          .webSocketBuilder(httpClient)
-          .commitment(Commitment.CONFIRMED)
-          .onOpen(_ -> System.out.println("Websocket connected"))
-          .onClose((_, statusCode, reason) -> System.out.format("%d: %s%n", statusCode, reason))
-          .onError((_, throwable) -> throwable.printStackTrace())
-          .create();
+    final var webSocket = SolanaRpcWebsocket.build()
+        .uri(SolanaNetwork.MAIN_NET.getWebSocketEndpoint())
+        .webSocketBuilder(httpClient)
+        .commitment(Commitment.CONFIRMED)
+        .onOpen(unused -> System.out.println("Websocket connected"))
+        .onClose((unused, statusCode, reason) -> System.out.format("%d: %s%n", statusCode, reason))
+        .onError((unused, throwable) -> throwable.printStackTrace())
+        .create();
 
-      webSocket.programSubscribe(
-          SolanaAccounts.MAIN_NET.addressLookupTableProgram(),
-          System.out::println,
-          accountInfo -> {
-            final var table = AddressLookupTable.read(accountInfo.pubKey(), accountInfo.data());
-            System.out.println(table);
-          }
-      );
+    webSocket.programSubscribe(
+        SolanaAccounts.MAIN_NET.addressLookupTableProgram(),
+        System.out::println,
+        accountInfo -> {
+          final var table = AddressLookupTable.read(accountInfo.pubKey(), accountInfo.data());
+          System.out.println(table);
+        }
+    );
 
-      webSocket.connect();
+    webSocket.connect();
 
-      Thread.sleep(Integer.MAX_VALUE);
-    }
+    Thread.sleep(Integer.MAX_VALUE);
   }
 }

@@ -84,7 +84,8 @@ public final class Entrypoint {
         Math.max(1, Runtime.getRuntime().availableProcessors() >> 1)
     );
 
-    try (final var executor = Executors.newFixedThreadPool(numThreads)) {
+    final var executor = Executors.newFixedThreadPool(numThreads);
+    try {
       final var keyPath = readKeyPath(moduleName, beginsWith, endsWith);
       final int findNumKeys = intProp(moduleName, "numKeys", 1);
       final int checkFound = intProp(moduleName, "checkFound", 131_072);
@@ -154,11 +155,12 @@ public final class Entrypoint {
               formatDuration(Duration.ofMillis(result.durationMillis()))
           );
           if (++numFound >= findNumKeys) {
-            executor.shutdownNow();
             return;
           }
         }
       }
+    } finally {
+      executor.shutdownNow();
     }
   }
 
