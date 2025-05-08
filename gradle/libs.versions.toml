@@ -1,0 +1,17 @@
+[versions]
+jsoniter = "0.9.23"
+junit = "5.9.1"
+solana = "1.18.0"
+bc = "1.74"
+jlink = "3.0.0"
+
+[libraries]
+bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bc" }
+jsoniter = { module = "systems.comodal:jsoniter", version.ref = "jsoniter" }
+json-iterator = { module = "systems.comodal:json-iterator", version = "2.13.0" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+
+[plugins]
+nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
+jlink = { id = "org.beryx.jlink", version.ref = "jlink" } 
