@@ -33,3 +33,12 @@ gpr.token=GITHUB_TOKEN
 ```shell
 ./gradlew check
 ```
+
+## Publish on local maven repository
+```shell
+./gradlew clean build publishToMavenLocal -PVERSION=1.18.1
+
+# If you encounter a similar error like `java.io.FileNotFoundException: /Users/oker/go/src/github.com/json-iterator/.gradle/8.13/fileHashes/fileHashes.lock (Operation not permitted)`, try to execute the following command and republish it again
+sudo chown -R $(whoami) .
+./gradlew --stop
+```
